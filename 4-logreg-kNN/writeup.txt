@@ -1,0 +1,38 @@
+Problem 3 - see pdf.
+
+Problem 4.
+f. Discuss the results of the probability plots.
+
+We can see that the distributions of the regression coefficients  and the sum of square residues are close to normal and chi-squared(N-2) respectively, since their probability plots are nearly straight lines. In addition, deviation from straight-line behavior occurs mainly at the edges, where there are fewer data points and hence higher variance. Increasing N to 1000 makes the plots closer to linear, as more data points reduce the variance and reveal the underlying linear structure. 
+
+Similarly, the means and standard deviations of the regression parameters, especially of the constant, start off somewhat offset from their expected values, but become closer as N_samples increases. 
+
+
+
+Problem 5. 
+
+b. kNN on all variables
+
+Best predictor parameters are n_neighbors = 3, with distance-weighted rather than uniformly-weighted points. This gives an f1-weighted score of .4945 with 2-fold cross-validation.
+
+The learning curve shows that the training set error is essentially zero while the test set error is large, so that this model has a lot of variance-derived error but essentially no bias-derived error.
+
+
+c. Logistic regression
+
+Best logistic regression had complexity-weighting parameter C and used an L2 penalty. This model had an f1-weighted score of .6569 from 2-fold stratified cross-validation.
+
+The learning curve shows that this model has some bias-derived error, but roughly twice as much variance-derived error (when considering an f1-weighted score, with 1 = no error).
+
+
+d. kNN on reduced variables
+Best set of variables found (for a 3-nearest-neighbor, distance weighted classifier) was a set of 17 variables. 
+
+The best parameters on these variables were still n_neighbors = 3, weighting = distance. This gave an f1-weighted score of .6629, slightly better than logistic regression.
+
+The learning curve for this model shows that it has some bias-based error, since training set error is no longer zero. However, variance-based error still predominates, in a similar manner to the logistic regression results above.
+
+
+e. There appears to be quite a lot of noise in the variance of the score, with the standard deviation of cross-validation pairs' variances being about equal to the overall variance of all scores calculated for a given k. (Note: these scores were calculated by getting scores from repeated 2-fold stratified cross-validation on each k.) 
+
+It is thus difficult to discern a pattern in the variances as k increases, although it appears that variance starts high, drops around k=10, and then increases somewhat up to around k=30, after which there is no clear trend. (Note that this pattern is for a distance-weighted 17-variable k-nearest-neighbors classifier.)

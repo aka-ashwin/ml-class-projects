@@ -1,0 +1,57 @@
+3. Answer = 1/2
+
+Reasoning:
+
+Original state: 6+, 4-
+x1 splits this into 7 left and 3 right examples
+
+If x1 does not affect anything, the probabilty distribution of +s over the two sides is governed purely by combinatorics.
+
+In total, there are 10-choose-7 = 10*9*8/(6) = 120 ways to divide the examples between left and right. 
+
+Further, there are 6-choose-4 * 4-choose-3 = 60 ways to choose 4 positive and 3 negative examples to place in the left branch. 
+
+Thus, the probability that this will occur if x1 has no bearing on the distribution of + and - is 60/120 = 1/2.
+
+
+4. We could use the kernel (1 + v_a dot v_b)^3, where v_a = <x_1a, x_2a> and v_b = <x_1b, x_2b>. 
+
+This kernel corresponds to the feature vector sqrt(2)<1/sqrt(2), x_i, sqrt(3/4) x_i x_j, x_i^2 x_j, 1/sqrt(2) x_i^3>, which includes the desired features as well as a constant term and an additional cross-term.
+
+(note that the oveall coefficient of x_1x_2 in the vector is sqrt(3), since it gets sqrt(3/4) from i=1 and sqrt(3/4) from i=2.)
+
+
+5. See pdf (partial_writeup.pdf) for LaTeXed writeup.
+
+
+6. Support Vector Machines
+
+a. My best guess would be the line y = 4x - 10. As per my notebook, this gives a closest distance of .4851, for point c.
+
+
+b. See notebook. For this linear SVM, the absolute distance of the closest point to the separator is .4850, for point d.
+
+
+c. My best guess would be the line y = -6x + 25.5, which has its closest distance of .4110 to point d. For the linear SVM, the absolute distance of the closest point to the separator is very close to .5 for both points c and d, since the margin separator is essentially a vertical line at x = 4.
+
+
+d. I don't think it's reasonable to guess a linear separator here. The C=100 linear SVM's separator has an absolute distance of .3196 to the nearest point, point e.
+
+
+e. See notebook.
+
+
+
+7. Boosting and Bagging
+See notebook for implementations. Note that I have not implemented classes for these as yet, but bagging and boosting only required two methods each, so it did not seem worthwhile to write a class as a wrapper.
+
+a. The dataset I used was the arrhythmia dataset from problem set 4, with the response variable replaced with a binary indicator of whether the original response variable was >= 4. For examining the effect of different K on training and test scores, I divided this dataset into a training set of 350 rows and a test set of 102 rows.
+
+On this dataset with the given split, the K required to reach a perfect score on the training set was about 101--significantly higher than in the Russell and Norvig example. Possibly as a result of the increased complexity in the hypothesis space, our results do not show overall improvement on the test set once score on the training set has reached 1. It is likely that this is in part because improvement would require K larger than I could fit in a reasonable amount of time. If I had had the time and computational resources to test K > 500, it is possible I would have seen some improvement.
+
+For the AdaBoost learning curve, I set K = 101. This led to a learning curve which had a sharp increase in score between N = 10 and 50, and gradual but steady increases as N increased further. These trends seem largely analogous to those in the 0 < N < 30 and 30 < N < ~40 ranges in the Russell-Norvig learning curve.
+ 
+ 
+7b. I chose to bag decision stumps, in order to better compare like to like when considering the improvements yielded by boosting versus bagging. I first found a roughly-optimal K for boosting using the same training-test split as for the AdaBoost classifier. This yielded a score curve that was essentially flat, especially for the test score. We can see from this that bagging provides much less marginal value per additional learner than boosting, even at quite small K.
+
+Comparing the learning curves for bagging and boosting, both with K = 101, we see that boosting is much better at the lowest N of 10, worse than bagging for intermediate N (50 to 150), and better thereafter. While the bagging score plateaus after N=50, the boosting score continues to increase. This illustrates the low combined bias and variance of boosting, as its ensemble of learners allows it to capture many patterns without overfitting. In comparison, bagging likely has similar or lower variance, but much higher bias, as it is more difficult for bagging to capture complex functions, especially with when bagging only simple learners like decision stumps. 

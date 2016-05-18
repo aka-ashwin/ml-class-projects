@@ -1,0 +1,14 @@
+Note: I am defining alpha such that each gradient descent step equals the average gradient over all data rows multiplied by alpha, or the sum of the gradients from all rows multiplied by alpha divided by m, the number of rows.
+
+Optimizing Alpha:
+To find the optimal alpha, I first tested alpha values ranging over several orders of magnitude: .0001, .001, .01, and so on. I found that values greater than .001 did not converge to a solution, instead yielding a greatly increasing J over time. On the other hand, .001 and values less than it appeared to converge to a solution with J/m = 5.38184580717 (corresponding to total J of about 5381.85, ln(J) of about 8.59). 
+
+I assumed convergence to this value from the flatness of the J-versus-iteration curve after reaching it (in 30 steps for alpha = .01), as well as a lack of change in J from this value after running the algorithm for many more steps (1000).
+
+As one might expect, the larger step sizes from setting alpha=.001 let the algorithm find this solution much more quickly than setting it to .0001 or lower values.
+
+Confirmation of Solution:
+In particular, the solution had height coefficient = .547557, weight coefficient = -1.2018, and constant =  5.535, for scaled and centered weight and height inputs. (That is, with weight and height values each rescaled by their standard deviation and centered on zero.) Rescaling these results to correspond to the original weight and height values gave the coefficient vector (7.11729, -13.189, 4.40385). Both of these coefficient vectors were consistent with linear regression results obtained from using the scikit-learn package.
+
+Fine testing of alpha optimality:
+I then looked more closely at alpha values near .001 and their convergence to this solution. I found that this value was close to optimal. Alpha values slightly greater than .001, like .00105, converged much more slowly (in >300 steps instead of 30), while values significantly greater, from roughly .0013 up, simply overcorrected during gradient descent and diverged in J. Optimality from the left was much less clear, but values very slightly less than .001 did no better (.0095 and .0098 also converged in 30 steps), while smaller values like .009 and .007 converged slightly more slowly. (And much smaller values like .0001 converged very slowly.)

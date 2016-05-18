@@ -1,0 +1,48 @@
+Chaudhary ML HW3 writeup
+
+2. boolean classifier with hypotheses y(x;a,b,c,d) = (a \leq x1 \leq b) and (c \leq x2 \leq d), for a,b,c,d in (1,..,n)
+
+
+2a) (a,b) and (c,d) can be chosen independently (do not impose restrictions on each other), so number of hypotheses = number of (a,b) pairs * number of (c,d) pairs.
+
+Further, (a,b) and (c,d) are chosen from the same space and with the same restrictions, so number hypotheses = (number of (a,b) pairs)^2.
+
+The only restriction is that a <= b, and (a,b) in {1,..,n}^2. The number of possible a,b pairs from this set with a!=b is n(n-1); half of these pairs, or n(n-1)/2, have a<b. Further, there are n choices of pairs with a=b. Thus, there are in total n[1 + ((n-1)/2)] = n(n+1)/2 choices of valid (a,b) pairs.
+
+Thus, there are (n(n+1)/2)^2 total choices of valid (a,b) and (c,d) pairs, and thus of models.
+
+
+2b) P(gen error <= 10%) <= 1 - P(gen error >= 10%)
+
+P(gen error >= 10%) <= N_bad_hyps * P(success|bad hyp) <= |H| * P(success| gen err >= 10%) <= |H| * P(success | gen err = 10%) = (n(n+1)/2)^2 * .9^N
+
+So P(gen error >= 10%) <= (n(n+1)/2)^2 * .9^N, where N is the number of data points.
+
+If we want to use this bound to ensure P(gen less than 5%, we need
+(n(n+1)/2)^2 * .9^N <= .05
+
+
+Thus, we need N ln(.9) <= ln(.05) - 2*ln(n(n+1)/2).
+or, to keep all variables positive, -N ln (10/9) <= -ln(20) - 2ln(n(n+1)/2).
+
+Thus, N >= [ln(20) + 2*ln(n(n+1)) ]/ln(10/9) is required, and N = [ln(20) + 2*ln(n(n+1))]/ln(10/9) is sufficient, to ensure P(gen error <= 10%) >= 95% if all training samples are correctly categorized. 
+
+
+3.
+3a) nrows = 10000 rows were used.
+
+
+3c) It could be useful to have a variable indicating whether the variable X_f had been imputed for a given row, depending on the underlying data. For example, it might be the case that missing values for a survey question about income are more likely for respondents with lower incomes--the missing values represent some significant bias, not just random loss. However, if it is fairly certain that missing values are mostly due to e.g. data-entry errors, or are relatively few,
+then adding an imputation indicator may be either useless or even somewhat harmful, as it could contribute to ovefitting.
+
+
+3d)If all dummy variables are used, the input matrix X will not be full-rank, as any dummy variable column can be constructed as a linear combination of the others. 
+
+(Specifically, the definition of indicator variables leads to the simple element-level formula x^(i)_j = 1 - sum_{l \neq i| (x^(l)_j). This implies that on a column level, x^(i) = [1,1,1,...,1] - sum_{l \neq i} x^(l).)
+
+However, the above construction requires all other indicator variables (at least if all variable values occur at least once). Thus, excluding a single indicator variable preserves all information in the original variable while preserving the input matrix X's full-rankness.
+
+
+3e-f) See notebook for notes on optimizing parameters. The best parameters found were C = 10. for logistic regression and (l1ratio = .5, alpha = .001) for the elastic net.
+
+3g) The error is almost entirely due to bias; as training set size increases, the difference in quadratic kappa between training and test set decays to a tiny fraction of the difference between these kappas and 1. The fact that the model has almost the same error on the training and test set indicates that almost no error is due to overfitting on the training set, also referred to as variance.

@@ -1,0 +1,110 @@
+3.
+First data point:
+theta * x = 0 + 0 + 1 = 1
+hw = 1
+alpha(y-hw) = .5(-1) = -.5
+
+all x-values are 1, so
+w_updated = [-.5,-.5,1-.5] = [-.5,-.5,+.5]
+
+Second data point: 
+w*x = -.5 -.5*2 +.5*2 = -.5 < 0
+hw = 0 = y
+no update
+
+
+if assigning points with w*x = 0 to hw = 0, we are done; w = [-.5,-5,.5] assigns all points to the correct points.
+
+If not, we must perform the next two updates to reach a stable w.
+
+Third data point:
+theta*x = -.5-.5*3+.5*4 .5(4-4) = 0
+if hw = 1 != y
+then alpha(y-hw) = -.5
+
+constant update: -.5
+w1 update: -.5*3 = -1.5
+w2 update: -.5*4 = -2
+w = [-1,-2,-1.5]
+
+Fourth data point:
+theta*x = -1 -6 -9 = -16
+hw = 0 != y
+alpha(y-hw) = .5
+
+constant update: +.5
+w1 update: +1.5
+w2 update: +3
+
+w = [-.5,-1,.75]
+
+This w correctly assigns all data points.
+
+
+4.
+a) See Images/p4 - rough sketch of points and boundary.jpg
+
+b) The above decision boundary corresponds to the equation x_1^2 + x_2^2 = 1. In a logistic regression, the decision boundary corresponds to the equation theta-transpose X = 0. Thus, the above decision boundary is the decision boundary of a logistic regression with constant = -1 and parameters [+1,+1] for input variables [x_1^2, x_2^2].
+
+c) For the above regression, since greater inputs increase the probability of class -, P(-) = 1/(1+exp(- theta^T X)), while P(+) = 1-P(-).
+
+For the first data point, P(-) = 1/(1+exp(1-.5)) = .38, so P(+) = 1-.38 = .62.
+
+For the last data point, P(-) = 1/(1+exp(1-4)) = .95, so P(+) = 1-.95 = .05.
+
+
+6. For the J-versus-iteration graph, see Images/p6-J vs iteration graph 
+
+The chosen alpha of .01 was used because it yielded both fast convergence and relatively small-magnitude coefficients (with magnitude ~ 10^-1 for scaled variables). While larger alpha values also appeared to converge in J, this convergence was only in slightly fewer iterations, and involved the use of very large coefficients (of magnitude ~ 10^1 for scaled variables). While these large coefficients may have been due to collinearities between the input variables, and not indicative of any large dependence on particular variables on the model's part, I decided to err on the side of caution and use a small but still quickly-converging alpha.
+
+Gradient descent logistic regression results using a learning rate alpha = .01:
+
+final theta:
+[-0.17951523292552021, -0.054354643783881974, -0.02356253896511909, -0.0019513366359514184, -2.4688933128031523, 12.165001196564161, -15.409420525465492, -32.10950197890962, 1.1765382637779582, 52.92887448794044, -6.3443048764116208, 1.3080218522679736, -0.42244618620163243, -0.034954223334653728, -203.57947561128753, 58.086036323096849, 0.64085806778751064, -55.769822426581818, 59.622158538627417, 467.21969611918757, -0.28160744105604091, -0.3752033744513012, -0.029440616781747943, -0.0025330804187709941, -52.020110732351554, 1.3947531788264043, -7.5351550392773685, -14.836205493001767, -23.164613522800497, -16.502061343787396]
+
+final constant: 44.9742274037
+
+When a threshold of .5 is used, this model has an accuracy ratio of 0.9895 on the training data.
+
+When the model is trained on only the first 469 rows of data, it instead yields the following theta:
+
+[-0.10813367757492023, -0.10937219765854808, -0.015310911853372505, -0.0010489807771694949, -12.891175964940814, -1.0674553697812146, -3.3915849185119571, -9.5364242261819125, -1.7059933788079664, 30.249017891044346, -1.3098970884189496, 0.13692070553228614, -0.14431786572291908, -0.0067262032147879574, -27.285603583196291, 10.928087886483697, 2.9073250837824181, -15.303216743443732, 11.569201168681252, 85.22918277187766, -0.09930923433321423, -0.08354191344747007, -0.013382992903109169, -0.00076514008441292, -20.151749933609203, -0.91178530024469395, -1.4305315269509788, -6.8302103282441653, -5.0905557251287421, -6.4313734873222828]
+
+with constant 19.017.
+
+Tested against the remaining 100 rows, this model has an accuracy of .97 of greater for classification thresholds of .1,.3,.45,.5, and .55, an accuracy of .94 for threshol = .7; its only low-accuracy threshold among those tested was threshold = .9, which gave accuracy of .73.
+
+(Note: most of these values are  higher than the sklearn model's accuracy ratio of .96 on the test data, but that model might be using a particular threshold in order to improve its false positive or false negative rate at the expense of overall accuracy.)
+
+
+
+7. sklearn logistic regression results:
+
+Theta:[  5.25245007e+00   2.41646806e-01  -4.49801715e-01  -1.73373025e-02
+   -8.31124487e-01  -9.71170499e-01  -2.07271591e+00  -1.61430889e+00
+   -1.19525969e+00   4.26023405e-03  -3.26787846e-01   3.16234805e+00
+   -6.67210333e-01  -9.36735161e-02  -1.07767069e-01   6.66892329e-01
+    5.79455738e-01  -1.58723803e-01  -1.07521337e-01   1.28935076e-01
+   -1.68749802e-01  -5.89461425e-01   1.19393780e-01  -2.13709366e-02
+   -1.58670115e+00  -2.14756239e+00  -3.92743576e+00  -3.05962035e+00
+   -3.15694136e+00  -1.60697036e-01]
+intercept = 1.41750562
+
+Accuracy on training data: 0.959578207381
+
+When run instead on the first 469 rows of data (and with parameter C = 100.), the sklearn regression yields the fairly different following theta:
+
+[  3.77891999e+00   2.00492797e-01  -3.55684459e-01  -3.56954194e-03
+   -4.08380363e-01  -8.30432844e-01  -1.19565942e+00  -7.88817504e-01
+   -4.95625879e-01  -6.87458670e-02  -1.72028545e-01   2.95544068e+00
+   -7.31484817e-01  -8.37861922e-02  -4.54432373e-02   1.50281673e-01
+    1.03671947e-01  -8.61908945e-02  -9.18300878e-02   3.98470116e-02
+    7.65500203e-01  -5.25943789e-01   7.08309311e-02  -3.13620168e-02
+   -7.72747540e-01  -2.28244547e+00  -2.79224976e+00  -1.59502446e+00
+   -1.61241289e+00  -2.41002121e-01]
+   
+  With intercept = 0.68092244.
+  
+ This model has an accuracy of .96 on the remaining 100 rows of data.
+
+8. see Images/p8 - degree 3 decision boundary for results
